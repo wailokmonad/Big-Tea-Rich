@@ -6,23 +6,22 @@ app.middleExclude(["/"])
 
 app.middleware(function(req, res, next){
     console.log("middleware 1....")
-    req.lok = 1
-    console.log(req.lok)
+    req.count = 1
+    console.log(req.count)
     next(req, res)
 })
 
 app.middleware(function(req, res, next){
   console.log("middleware 2....")
-  req.lok += 1
-  console.log(req.lok)
-  
+  req.count += 1
+  console.log(req.count)
   next(req, res, true)
 })
 
 app.middleware(function(req, res, next){
   console.log("middleware 3....")
-  req.lok += 1
-  console.log(req.lok)
+  req.count += 1
+  console.log(req.count)
   next(req, res)
 })
 
@@ -43,7 +42,8 @@ app.get("/index", function(req ,res){
 
 app.post("/book", function(req ,res){
 
-  res.end("******** post")
+  res.end(JSON.stringify(req.form))
+    
 })
 
 app.view("View")

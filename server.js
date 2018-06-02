@@ -2,7 +2,7 @@ let http = require("http")
 let url = require('url');
 let fs = require('fs');
 let EventEmitter = require('events');
-let helper = require('./helper').default;
+let helper = require('./helper');
 let StringDecoder = require('string_decoder').StringDecoder;
 let decoder = new StringDecoder('utf-8');
 let server = {}
@@ -117,7 +117,7 @@ let ServerFunc = function(req, res){
 
     req.on('end', function() {
         buffer += decoder.end();
-
+        console.log(buffer)
         try{
             req.form = JSON.parse(buffer)
         }catch(e){
