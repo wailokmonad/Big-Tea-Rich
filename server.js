@@ -12,6 +12,7 @@ let StaticPath
 let MiddleWare = 0
 let MiddleWareCount = 0
 let middleExclude = []
+let PORT = process.env.NODE_ENV || 3000
 
 class MyEmitter extends EventEmitter {}
 let e = new MyEmitter();
@@ -21,8 +22,8 @@ server.init = function(){
         http.createServer(function(req, res){
             ServerFunc(req,res)
         })
-        .listen(3000,function(){
-            console.log("Listening.....");
+        .listen(PORT,function(){
+            console.log(`Listening on ${PORT}`);
         });
 }
 

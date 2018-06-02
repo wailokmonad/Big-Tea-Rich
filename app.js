@@ -1,11 +1,32 @@
 let app = require("./server")
+let cluster = require('cluster');
+let numCPUs = require('os').cpus().length;
 
-app.init();
+// if(require.main === module){
+//   app.init(function(){});
+// }
+
+if(cluster.isMaster){
+
+  console.log(`Master ${process.pid} is running`);
+  for(var i = 0; i < numCPUs; i++){
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.log(`worker ${worker.process.pid} died`);
+  });
+
+}else{
+  app.init();
+  console.log(`Worker ${process.pid} started`);
+  
+}
 
 app.middleExclude(["/"])
 
 app.middleware(function(req, res, next){
-    console.log("middleware 1........")
+    console.log("middleware 1....")
     req.count = 1
     console.log(req.count)
     next(req, res)
