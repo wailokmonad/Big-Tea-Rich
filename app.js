@@ -5,7 +5,7 @@ app.init();
 app.middleExclude(["/"])
 
 app.middleware(function(req, res, next){
-    console.log("middleware 1....")
+    console.log("middleware 1........")
     req.count = 1
     console.log(req.count)
     next(req, res)
