@@ -101,10 +101,13 @@ let ServerFunc = function(req, res){
             }else{
 
                 let _content = content
+                let re
 
                 if(data && typeof data == "object" && Object.keys(data).length > 0){
                     for(let key in data){
-                        _content = _content.replace("{{" + key + "}}", data[key])
+
+                        re = new RegExp("<%=" + key + "=%>","g");
+                        _content = _content.replace(re, data[key])
             
                     }
                 }
