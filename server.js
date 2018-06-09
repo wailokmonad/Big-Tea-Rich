@@ -31,6 +31,7 @@ let ServerFunc = function(req, res){
 
     let path;
     req.method = req.method.toLowerCase()
+    req.url = req.url.trim()
 
     if(req.url.indexOf(StaticPath) > -1){
 
@@ -53,8 +54,13 @@ let ServerFunc = function(req, res){
         }
 
         fs.readFile(StaticPath + "/" + filename, function(err, content){
-            res.setHeader('Content-Type', content_type);
-            res.end(content)
+            if(!err){
+                res.setHeader('Content-Type', content_type);
+                res.end(content)
+            }else{
+                res.end()
+            }
+            
         })
 
         return
@@ -65,20 +71,25 @@ let ServerFunc = function(req, res){
 
         path = "/"
 
-    }else if(route.hasOwnProperty(req.url)){
+    }else if(route.hasOwnProperty(req.url + "_GET") && req.method == "get"){
 
-        if(route[req.url] == req.method){
+        path = req.url + "_GET"
 
-            path = req.url
-
-        }else{
-
-            path = "error"
-        }
+    }else if(route.hasOwnProperty(req.url + "_POST") && req.method == "post"){
+        
+        path = req.url + "_POST"
 
     }else{
 
         path = "error"
+    }
+
+
+    req.funcPath = path
+
+    res.json = function(data){
+
+        res.end(JSON.stringify(data))
     }
 
     res.render = function(html, data){
@@ -118,7 +129,6 @@ let ServerFunc = function(req, res){
 
     req.on('end', function() {
         buffer += decoder.end();
-        console.log(buffer)
         try{
             req.form = JSON.parse(buffer)
         }catch(e){
@@ -156,22 +166,29 @@ let ServerFunc = function(req, res){
 
 server.get = function(path, callback){
 
+    let _path
+
     if(path.trim() == "/"){
-        route["/"] = "get"
+
+        _path = "/"
+        route["/"] = ""
     }else{
-        route[path] = "get"
+        _path = path.trim() + "_GET"
+        route[_path] = ""
     }
 
-    e.on(path, function(req, res){
+    e.on(_path, function(req, res){
         callback(req, res)
     })
 }
 
 server.post = function(path, callback){
 
-    route[path] = "post"
+    let _path = path.trim() + "_POST"
 
-    e.on(path, function(req, res){
+    route[_path] = ""
+
+    e.on(_path, function(req, res){
         callback(req, res)
     })
 }
@@ -214,7 +231,7 @@ let Next = function(req, res, stop){
         e.emit("MiddleWare_" + MiddleWareCount, req, res, Next)
     }else{
         MiddleWareCount = 0
-        e.emit(req.url, req, res)
+        e.emit(req.funcPath, req, res)
     }
 }
 

@@ -61,9 +61,15 @@ app.get("/index", function(req ,res){
 
 })
 
+app.get("/book", function(req ,res){
+
+  res.render("book")
+    
+})
+
 app.post("/book", function(req ,res){
 
-  res.end(JSON.stringify(req.form))
+  res.json(req.form)
     
 })
 
