@@ -1,3 +1,5 @@
+"use strict";
+
 let helper = {}
 
 helper.Deserialize = function(pString){
@@ -12,7 +14,7 @@ helper.Deserialize = function(pString){
         obj[pair[0]] = pair[1]
 
       }
-      
+
       return obj
 }
 

@@ -1,3 +1,5 @@
+"use strict";
+
 let app = require("./server")
 let cluster = require('cluster');
 let numCPUs = require('os').cpus().length;
@@ -20,7 +22,7 @@ if(cluster.isMaster){
 }else{
   app.init();
   console.log(`Worker ${process.pid} started`);
-  
+
 }
 
 app.middleExclude(["/"])
@@ -64,13 +66,13 @@ app.get("/index", function(req ,res){
 app.get("/book", function(req ,res){
 
   res.render("book")
-    
+
 })
 
 app.post("/book", function(req ,res){
 
   res.json(req.form)
-    
+
 })
 
 app.view("View")

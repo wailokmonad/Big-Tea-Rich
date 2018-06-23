@@ -1,3 +1,5 @@
+"use strict";
+
 let http = require("http")
 let url = require('url');
 let fs = require('fs');
@@ -60,7 +62,7 @@ let ServerFunc = function(req, res){
             }else{
                 res.end()
             }
-            
+
         })
 
         return
@@ -76,7 +78,7 @@ let ServerFunc = function(req, res){
         path = req.url + "_GET"
 
     }else if(route.hasOwnProperty(req.url + "_POST") && req.method == "post"){
-        
+
         path = req.url + "_POST"
 
     }else{
@@ -108,7 +110,7 @@ let ServerFunc = function(req, res){
 
                         re = new RegExp("<%=" + key + "=%>","g");
                         _content = _content.replace(re, data[key])
-            
+
                     }
                 }
 
@@ -151,10 +153,10 @@ let ServerFunc = function(req, res){
             }catch(e){
                 res.end()
             }
-            
+
             return
         }
-        
+
 
         try{
             e.emit(path, req, res)
