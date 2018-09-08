@@ -13,7 +13,6 @@ let ViewPath
 let StaticPath
 let MiddleWare = 0
 let MiddleWareCount = 0
-let middleExclude = []
 let PORT = process.env.NODE_ENV || 3000
 
 class MyEmitter extends EventEmitter {}
@@ -108,7 +107,7 @@ let ServerFunc = function(req, res){
                 if(data && typeof data == "object" && Object.keys(data).length > 0){
                     for(let key in data){
 
-                        re = new RegExp("<%=" + key + "=%>","g");
+                        re = new RegExp("<%=.*?" + key + ".*?=%>","gm");
                         _content = _content.replace(re, data[key])
 
                     }
@@ -145,7 +144,7 @@ let ServerFunc = function(req, res){
 
         }
 
-        if(MiddleWare > 0 && path != "error" && middleExclude.indexOf(path) == -1){
+        if(MiddleWare > 0 && path != "error" && path != "/"){
 
             MiddleWareCount += 1
             try{
@@ -196,10 +195,6 @@ server.post = function(path, callback){
     e.on(_path, function(req, res){
         callback(req, res)
     })
-}
-
-server.middleExclude = function(arr){
-    middleExclude = arr
 }
 
 

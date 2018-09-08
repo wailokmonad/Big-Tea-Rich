@@ -4,9 +4,11 @@ let app = require("./server")
 let cluster = require('cluster');
 let numCPUs = require('os').cpus().length;
 
-// if(require.main === module){
-//   app.init(function(){});
-// }
+/*
+if(require.main === module){
+  app.init(function(){});
+}
+*/
 
 if(cluster.isMaster){
 
@@ -25,54 +27,27 @@ if(cluster.isMaster){
 
 }
 
-app.middleExclude(["/"])
-
 app.middleware(function(req, res, next){
     console.log("middleware 1....")
-    req.count = 1
-    console.log(req.count)
     next(req, res)
 })
 
 app.middleware(function(req, res, next){
   console.log("middleware 2....")
-  req.count += 1
-  console.log(req.count)
   next(req, res, true)
 })
 
-app.middleware(function(req, res, next){
-  console.log("middleware 3....")
-  req.count += 1
-  console.log(req.count)
-  next(req, res)
-})
-
-
-
-
 
 app.get("/", function(req ,res){
-
   res.render("index")
 })
 
-app.get("/index", function(req ,res){
-
-  res.render("index", {"name":"Lok","age":28,"job":"programmer","address":"Hong Kong"})
-
-})
-
 app.get("/book", function(req ,res){
-
   res.render("book")
-
 })
 
 app.post("/book", function(req ,res){
-
   res.json(req.form)
-
 })
 
 app.view("View")
